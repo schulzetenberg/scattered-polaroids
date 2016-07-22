@@ -1,58 +1,28 @@
-/**
- * photostack.js v1.0.0
- * http://www.codrops.com
- *
- * Licensed under the MIT license.
- * http://www.opensource.org/licenses/mit-license.php
- * 
- * Copyright 2014, Codrops
- * http://www.codrops.com
- */
-;( function( window ) {
+;( function( window ) {[]
 
 	'use strict';
 
-	// https://gist.github.com/edankwan/4389601
-	Modernizr.addTest('csstransformspreserve3d', function () {
-		var prop = Modernizr.prefixed('transformStyle');
-		var val = 'preserve-3d';
-		var computedStyle;
-		if(!prop) return false;
-
-		prop = prop.replace(/([A-Z])/g, function(str,m1){ return '-' + m1.toLowerCase(); }).replace(/^ms-/,'-ms-');
-
-		Modernizr.testStyles('#modernizr{' + prop + ':' + val + ';}', function (el, rule) {
-			computedStyle = window.getComputedStyle ? getComputedStyle(el, null).getPropertyValue(prop) : '';
-		});
-
-		return (computedStyle === val);
-	});
-
-	var support = { 
-			transitions : Modernizr.csstransitions,
-			preserve3d : Modernizr.csstransformspreserve3d
-		},
-		transEndEventNames = {
+	var transEndEventNames = {
 			'WebkitTransition': 'webkitTransitionEnd',
 			'MozTransition': 'transitionend',
 			'OTransition': 'oTransitionEnd',
 			'msTransition': 'MSTransitionEnd',
 			'transition': 'transitionend'
 		},
-		transEndEventName = transEndEventNames[ Modernizr.prefixed( 'transition' ) ];
+		transEndEventName = transEndEventNames[ Modernizr.prefixed('transition') ];
 
 	function extend( a, b ) {
-		for( var key in b ) { 
-			if( b.hasOwnProperty( key ) ) {
+		for( var key in b ) {
+			if(b.hasOwnProperty( key )) {
 				a[key] = b[key];
 			}
 		}
 		return a;
 	}
 
-	function shuffleMArray( marray ) {
+	function shuffleMArray(marray) {
 		var arr = [], marrlen = marray.length, inArrLen = marray[0].length;
-		for(var i = 0; i < marrlen; i++) {
+		for(var i=0; i < marrlen; i++) {
 			arr = arr.concat( marray[i] );
 		}
 		// shuffle 2 d array
@@ -70,7 +40,7 @@
 		return newmarr;
 	}
 
-	function shuffleArr( array ) {
+	function shuffleArr(array) {
 		var m = array.length, t, i;
 		// While there remain elements to shuffle…
 		while (m) {
@@ -84,13 +54,13 @@
 		return array;
 	}
 
-	function Photostack( el, options ) {
+	function Photostack(el, options) {
 		this.el = el;
-		this.inner = this.el.querySelector( 'div' );
+		this.inner = this.el.querySelector('div');
 		this.allItems = [].slice.call( this.inner.children );
 		this.allItemsCount = this.allItems.length;
-		if( !this.allItemsCount ) return;
-		this.items = [].slice.call( this.inner.querySelectorAll( 'figure:not([data-dummy])' ) );
+		if(!this.allItemsCount) return;
+		this.items = [].slice.call( this.inner.querySelectorAll('figure:not([data-dummy])') );
 		this.itemsCount = this.items.length;
 		// index of the current photo
 		this.current = 0;
@@ -102,7 +72,7 @@
 	Photostack.prototype.options = {};
 
 	Photostack.prototype._init = function() {
-		this.currentItem = this.items[ this.current ];
+		this.currentItem = this.items[this.current];
 		this._addNavigation();
 		this._getSizes();
 		this._initEvents();
@@ -110,9 +80,9 @@
 
 	Photostack.prototype._addNavigation = function() {
 		// add nav dots
-		this.nav = document.createElement( 'nav' )
+		this.nav = document.createElement('nav')
 		var inner = '';
-		for( var i = 0; i < this.itemsCount; ++i ) {
+		for(var i=0; i < this.itemsCount; ++i ) {
 			inner += '<span></span>';
 		}
 		this.nav.innerHTML = inner;
@@ -122,54 +92,48 @@
 
 	Photostack.prototype._initEvents = function() {
 		var self = this,
-			beforeStep = classie.hasClass( this.el, 'photostack-start' ),
+			beforeStep = this.el.classList.contains('photostack-start'),
 			open = function() {
-				var setTransition = function() { 
-					if( support.transitions ) {
-						classie.addClass( self.el, 'photostack-transition' ); 
-					}
+				var setTransition = function() {
+					self.el.classList.add('photostack-transition');
 				}
-				if( beforeStep ) {
-					this.removeEventListener( 'click', open ); 
-					classie.removeClass( self.el, 'photostack-start' );
+				if(beforeStep) {
+					this.removeEventListener('click', open);
+					self.el.classList.remove('photostack-start');
 					setTransition();
-				}
-				else {
+				} else {
 					self.openDefault = true;
 					setTimeout( setTransition, 25 );
 				}
-				self.started = true; 
+				self.started = true;
 				self._showPhoto( self.current );
 			};
 
-		if( beforeStep ) {
+		if(beforeStep) {
 			this._shuffle();
-			this.el.addEventListener( 'click', open );
-		}
-		else {
+			this.el.addEventListener('click', open);
+		} else {
 			open();
 		}
 
-		this.navDots.forEach( function( dot, idx ) {
-			dot.addEventListener( 'click', function() {
+		this.navDots.forEach(function(dot, idx) {
+			dot.addEventListener('click', function() {
 				// rotate the photo if clicking on the current dot
-				if( idx === self.current ) {
+				if(idx === self.current) {
 					self._rotateItem();
-				}
-				else {
+				} else {
 					// if the photo is flipped then rotate it back before shuffling again
 					var callback = function() { self._showPhoto( idx ); }
-					if( self.flipped ) {
+					if(self.flipped) {
 						self._rotateItem( callback );
-					}
-					else {
+					} else {
 						callback();
 					}
 				}
 			} );
 		} );
 
-		window.addEventListener( 'resize', function() { self._resizeHandler(); } );
+		window.addEventListener('resize', function() { self._resizeHandler(); });
 	}
 
 	Photostack.prototype._resizeHandler = function() {
@@ -178,65 +142,57 @@
 			self._resize();
 			self._resizeTimeout = null;
 		}
-		if ( this._resizeTimeout ) {
-			clearTimeout( this._resizeTimeout );
-		}
+		if (this._resizeTimeout) clearTimeout( this._resizeTimeout );
 		this._resizeTimeout = setTimeout( delayed, 100 );
 	}
 
 	Photostack.prototype._resize = function() {
 		var self = this, callback = function() { self._shuffle( true ); }
 		this._getSizes();
-		if( this.started && this.flipped ) {
+		if(this.started && this.flipped) {
 			this._rotateItem( callback );
-		}
-		else {
+		}	else {
 			callback();
 		}
 	}
 
 	Photostack.prototype._showPhoto = function( pos ) {
-		if( this.isShuffling ) {
-			return false;
-		}
+		if(this.isShuffling) return false;
 		this.isShuffling = true;
 
 		// if there is something behind..
-		if( classie.hasClass( this.currentItem, 'photostack-flip' ) ) {
+		if(this.currentItem.classList.contains('photostack-flip')) {
 			this._removeItemPerspective();
-			classie.removeClass( this.navDots[ this.current ], 'flippable' );
+			this.navDots[this.current].classList.remove('flippable')
 		}
 
-		classie.removeClass( this.navDots[ this.current ], 'current' );
-		classie.removeClass( this.currentItem, 'photostack-current' );
-		
+		this.navDots[this.current].classList.remove('current');
+		this.currentItem.classList.remove('photostack-current');
+
 		// change current
 		this.current = pos;
 		this.currentItem = this.items[ this.current ];
-		
-		classie.addClass( this.navDots[ this.current ], 'current' );
+
+		this.navDots[this.current].classList.add('current');
 		// if there is something behind..
-		if( this.currentItem.querySelector( '.photostack-back' ) ) {
-			// nav dot gets class flippable
-			classie.addClass( this.navDots[ pos ], 'flippable' );
-		}
+		if(this.currentItem.querySelector('.photostack-back') ) this.navDots[pos].classList.add('flippable'); // nav dot gets class flippable
 
 		// shuffle a bit
 		this._shuffle();
 	}
 
 	// display items (randomly)
-	Photostack.prototype._shuffle = function( resize ) {
+	Photostack.prototype._shuffle = function(resize) {
 		var iter = resize ? 1 : this.currentItem.getAttribute( 'data-shuffle-iteration' ) || 1;
-		if( iter <= 0 || !this.started || this.openDefault ) { iter = 1; }
+		if(iter <= 0 || !this.started || this.openDefault) { iter = 1; }
 		// first item is open by default
-		if( this.openDefault ) {
+		if(this.openDefault) {
 			// change transform-origin
-			classie.addClass( this.currentItem, 'photostack-flip' );
+			this.currentItem.classList.add('photostack-flip');
 			this.openDefault = false;
 			this.isShuffling = false;
 		}
-		
+
 		var overlapFactor = .5,
 			// lines & columns
 			lines = Math.ceil(this.sizes.inner.width / (this.sizes.item.width * overlapFactor) ),
@@ -263,9 +219,9 @@
 							yVal = i * (self.sizes.item.height * overlapFactor) - extraY,
 							olx = 0, oly = 0;
 
-						if( self.started && iter === 0 ) {
+						if(self.started && iter === 0) {
 							var ol = self._isOverlapping( { x : xVal, y : yVal } );
-							if( ol.overlapping ) {
+							if(ol.overlapping) {
 								olx = ol.noOverlap.x;
 								oly = ol.noOverlap.y;
 								var r = Math.floor( Math.random() * 3 );
@@ -285,11 +241,10 @@
 				var l = 0, c = 0, cntItemsAnim = 0;
 				self.allItems.forEach( function( item, i ) {
 					// pick a random item from the grid
-					if( l === lines - 1 ) {
+					if(l === lines - 1) {
 						c = c === columns - 1 ? 0 : c + 1;
 						l = 1;
-					}
-					else {
+					} else {
 						++l
 					}
 
@@ -299,19 +254,16 @@
 						translation = { x : gridVal.x, y : gridVal.y },
 						onEndTransitionFn = function() {
 							++cntItemsAnim;
-							if( support.transitions ) {
-								this.removeEventListener( transEndEventName, onEndTransitionFn );
-							}
-							if( cntItemsAnim === self.allItemsCount ) {
-								if( iter > 0 ) {
+							this.removeEventListener( transEndEventName, onEndTransitionFn );
+							if(cntItemsAnim === self.allItemsCount) {
+								if(iter > 0) {
 									moveItems.call();
-								}
-								else {
+								} else {
 									// change transform-origin
-									classie.addClass( self.currentItem, 'photostack-flip' );
+									self.currentItem.classList.add('photostack-flip');
 									// all done..
 									self.isShuffling = false;
-									if( typeof self.options.callback === 'function' ) {
+									if(typeof self.options.callback === 'function') {
 										self.options.callback( self.currentItem );
 									}
 								}
@@ -323,24 +275,18 @@
 						self.currentItem.style.msTransform = 'translate(' + self.centerItem.x + 'px,' + self.centerItem.y + 'px) rotate(0deg)';
 						self.currentItem.style.transform = 'translate(' + self.centerItem.x + 'px,' + self.centerItem.y + 'px) rotate(0deg)';
 						// if there is something behind..
-						if( self.currentItem.querySelector( '.photostack-back' ) ) {
+						if(self.currentItem.querySelector('.photostack-back')) {
 							self._addItemPerspective();
 						}
-						classie.addClass( self.currentItem, 'photostack-current' );
-					}
-					else {
+						self.currentItem.classList.add('photostack-current');
+					} else {
 						item.style.WebkitTransform = 'translate(' + translation.x + 'px,' + translation.y + 'px) rotate(' + Math.floor( Math.random() * (maxrot - minrot + 1) + minrot ) + 'deg)';
 						item.style.msTransform = 'translate(' + translation.x + 'px,' + translation.y + 'px) rotate(' + Math.floor( Math.random() * (maxrot - minrot + 1) + minrot ) + 'deg)';
 						item.style.transform = 'translate(' + translation.x + 'px,' + translation.y + 'px) rotate(' + Math.floor( Math.random() * (maxrot - minrot + 1) + minrot ) + 'deg)';
 					}
 
-					if( self.started ) {
-						if( support.transitions ) {
-							item.addEventListener( transEndEventName, onEndTransitionFn );
-						}
-						else {
-							onEndTransitionFn();
-						}
+					if(self.started) {
+						item.addEventListener( transEndEventName, onEndTransitionFn );
 					}
 				} );
 			};
@@ -353,12 +299,12 @@
 			inner : { width : this.inner.offsetWidth, height : this.inner.offsetHeight },
 			item : { width : this.currentItem.offsetWidth, height : this.currentItem.offsetHeight }
 		};
-		
+
 		// translation values to center an item
 		this.centerItem = { x : this.sizes.inner.width / 2 - this.sizes.item.width / 2, y : this.sizes.inner.height / 2 - this.sizes.item.height / 2 };
 	}
 
-	Photostack.prototype._isOverlapping = function( itemVal ) {
+	Photostack.prototype._isOverlapping = function(itemVal) {
 		var dxArea = this.sizes.item.width + this.sizes.item.width / 3, // adding some extra avoids any rotated item to touch the central area
 			dyArea = this.sizes.item.height + this.sizes.item.height / 3,
 			areaVal = { x : this.sizes.inner.width / 2 - dxArea / 2, y : this.sizes.inner.height / 2 - dyArea / 2 },
@@ -388,60 +334,43 @@
 	}
 
 	Photostack.prototype._addItemPerspective = function() {
-		classie.addClass( this.el, 'photostack-perspective' );
+		this.el.classList.add('photostack-perspective');
 	}
 
 	Photostack.prototype._removeItemPerspective = function() {
-		classie.removeClass( this.el, 'photostack-perspective' );
-		classie.removeClass( this.currentItem, 'photostack-flip' );
+		this.el.classList.remove('photostack-perspective');
+		this.currentItem.classList.remove('photostack-flip');
 	}
 
 	Photostack.prototype._rotateItem = function( callback ) {
-		if( classie.hasClass( this.el, 'photostack-perspective' ) && !this.isRotating && !this.isShuffling ) {
+		if(this.el.classList.contains('photostack-perspective') && !this.isRotating && !this.isShuffling) {
+
 			this.isRotating = true;
 
 			var self = this, onEndTransitionFn = function() {
-					if( support.transitions && support.preserve3d ) {
-						this.removeEventListener( transEndEventName, onEndTransitionFn );
-					}
+					this.removeEventListener( transEndEventName, onEndTransitionFn );
 					self.isRotating = false;
-					if( typeof callback === 'function' ) {
+					if(typeof callback === 'function') {
 						callback();
 					}
 				};
 
-			if( this.flipped ) {
-				classie.removeClass( this.navDots[ this.current ], 'flip' );
-				if( support.preserve3d ) {
-					this.currentItem.style.WebkitTransform = 'translate(' + this.centerItem.x + 'px,' + this.centerItem.y + 'px) rotateY(0deg)';
-					this.currentItem.style.transform = 'translate(' + this.centerItem.x + 'px,' + this.centerItem.y + 'px) rotateY(0deg)';
-				}
-				else {
-					classie.removeClass( this.currentItem, 'photostack-showback' );
-				}
-			}
-			else {
-				classie.addClass( this.navDots[ this.current ], 'flip' );
-				if( support.preserve3d ) {
-					this.currentItem.style.WebkitTransform = 'translate(' + this.centerItem.x + 'px,' + this.centerItem.y + 'px) translate(' + this.sizes.item.width + 'px) rotateY(-179.9deg)';
-					this.currentItem.style.transform = 'translate(' + this.centerItem.x + 'px,' + this.centerItem.y + 'px) translate(' + this.sizes.item.width + 'px) rotateY(-179.9deg)';
-				}
-				else {
-					classie.addClass( this.currentItem, 'photostack-showback' );
-				}
+			if(this.flipped) {
+				this.navDots[this.current].classList.remove('flip');
+				this.currentItem.style.WebkitTransform = 'translate(' + this.centerItem.x + 'px,' + this.centerItem.y + 'px) rotateY(0deg)';
+				this.currentItem.style.transform = 'translate(' + this.centerItem.x + 'px,' + this.centerItem.y + 'px) rotateY(0deg)';
+			}	else {
+				this.navDots[this.current].classList.add('flip');
+				this.currentItem.style.WebkitTransform = 'translate(' + this.centerItem.x + 'px,' + this.centerItem.y + 'px) translate(' + this.sizes.item.width + 'px) rotateY(-179.9deg)';
+				this.currentItem.style.transform = 'translate(' + this.centerItem.x + 'px,' + this.centerItem.y + 'px) translate(' + this.sizes.item.width + 'px) rotateY(-179.9deg)';
 			}
 
 			this.flipped = !this.flipped;
-			if( support.transitions && support.preserve3d ) {
-				this.currentItem.addEventListener( transEndEventName, onEndTransitionFn );
-			}
-			else {
-				onEndTransitionFn();
-			}
+			this.currentItem.addEventListener( transEndEventName, onEndTransitionFn );
 		}
 	}
 
 	// add to global namespace
 	window.Photostack = Photostack;
 
-})( window );
+})(window);
