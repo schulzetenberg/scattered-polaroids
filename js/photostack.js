@@ -1,15 +1,29 @@
+// TransitionEnd polyfill
+(function(){
+	function transitionEndEventName() {
+		const el = document.createElement('div');
+		const transitions = {
+			'transition':'transitionend',
+			'OTransition':'otransitionend',
+			'MozTransition':'transitionend',
+			'WebkitTransition':'webkitTransitionEnd'
+		};
+
+		for (let i in transitions) {
+			if (transitions.hasOwnProperty(i) && el.style[i] !== undefined) {
+				return transitions[i];
+			}
+		}
+	}
+
+	window.transitionEnd = transitionEndEventName();
+})();
+
 ;( function( window ) {[]
 
 	'use strict';
 
-	var transEndEventNames = {
-			'WebkitTransition': 'webkitTransitionEnd',
-			'MozTransition': 'transitionend',
-			'OTransition': 'oTransitionEnd',
-			'msTransition': 'MSTransitionEnd',
-			'transition': 'transitionend'
-		},
-		transEndEventName = transEndEventNames[ Modernizr.prefixed('transition') ];
+	var transEndEventName = window.transitionEnd;
 
 	function extend( a, b ) {
 		for( var key in b ) {
