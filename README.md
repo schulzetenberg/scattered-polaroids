@@ -1,5 +1,11 @@
-Scattered Polaroids Example
+# Photostack - Scattered Polaroids
 =========
 
-The original Scattered Polaroids Gallery code as well as a complete demo can be found here: 
-https://github.com/codrops/ScatteredPolaroidsGallery
+### Online Demo: https://schulzetenberg.github.io/Scattered-Polaroids-Example/
+
+### Generate PNG screenshot via CLI
+```sh
+$ npm i
+$ npm start
+Screenshot will be saved as photostack.png
+```
