@@ -1,7 +1,7 @@
-# Photostack - Scattered Polaroids
+# Scattered Polaroids
 =========
 
-### Online Demo: https://schulzetenberg.github.io/Scattered-Polaroids-Example/
+### Online Demo: https://schulzetenberg.github.io/scattered-polaroids/
 
 ### Generate PNG screenshot via CLI
 ```sh
