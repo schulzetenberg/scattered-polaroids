@@ -7,7 +7,7 @@ const artistData = require('./example');
 
 const viewPort = { width: 1280, height: 600 };
 const options = {
-  path: 'photostack.png',
+  path: 'scattered-polaroids.png',
   fullPage: true,
   /*
   clip: {

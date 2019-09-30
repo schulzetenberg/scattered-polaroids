@@ -7,5 +7,5 @@
 ```sh
 $ npm i
 $ npm start
-Screenshot will be saved as photostack.png
+Screenshot will be saved as scattered-polaroids.png
 ```
