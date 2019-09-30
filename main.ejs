@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Scattered Polaroids</title>
+		<style>
+			<%- stylesCss %>
+			<%- normalizeCss %>
+		</style>
+		<link href="https://fonts.googleapis.com/css?family=Rock+Salt" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<div class="container">
+			<div id="photostack" class="photostack">
+				<div>
+					<figure>
+						<a class="photostack-img">
+							<img src="<%= artistData[0].image %>"/>
+						</a>
+						<figcaption>
+							<h2 class="photostack-title"><%= artistData[0].name %></h2>
+						</figcaption>
+					</figure>
+					<% for (let i=1; i < artistData.length; i++) { %>
+						<figure data-dummy>
+							<a class="photostack-img">
+								<img src="<%= artistData[i].image %>"/>
+							</a>
+							<figcaption>
+								<h2 class="photostack-title"><%= artistData[i].name %></h2>
+							</figcaption>
+						</figure>
+					<% } %>
+				</div>
+			</div>
+		</div>
+		<script>
+		<%- scatteredPolaroids %>
+
+			new Photostack(document.getElementById('photostack'), {
+				callback: function(err) {
+					if(err) {
+						return console.error(`Photostack error: ${err}`);
+					}
+
+					console.log('Done rendering!');
+				}
+			});
+		</script>
+	</body>
+</html>
