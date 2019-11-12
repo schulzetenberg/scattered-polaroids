@@ -4,8 +4,8 @@ const ejs = require('ejs');
 const puppeteer = require('puppeteer');
 
 const artistData = require('./example');
+const { width, height } = require('./config');
 
-const viewPort = { width: 1280, height: 600 };
 const options = {
   path: 'scattered-polaroids.png',
   fullPage: true,
@@ -21,7 +21,7 @@ const options = {
 
 const templatePage = fs.readFileSync(`${path.join(__dirname, 'main.ejs')}`, 'utf8');
 const stylesCss = fs.readFileSync(`${path.join(__dirname, 'css/styles.css')}`, 'utf8');
-const normalizeCss = fs.readFileSync(`${path.join(__dirname, 'css/normalize.css')}`, 'utf8');
+const normalizeCss = fs.readFileSync('node_modules/normalize.css/normalize.css', 'utf8');
 const scatteredPolaroids = fs.readFileSync(`${path.join(__dirname, 'js/scattered-polaroids.js')}`, 'utf8');
 
 const templateData = {
@@ -40,7 +40,7 @@ const renderedPage = ejs.render(templatePage, templateData, {});
 (async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  await page.setViewport(viewPort);
+  await page.setViewport({ width, height });
   console.log(renderedPage);
   await page.setContent(renderedPage, { waitUntil: 'networkidle0'} );
   await page.screenshot(options);

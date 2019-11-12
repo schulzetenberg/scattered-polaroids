@@ -13,23 +13,23 @@
 	</head>
 	<body>
 		<div class="container">
-			<div id="photostack" class="photostack">
+			<div id="polaroids" class="polaroids">
 				<div>
 					<figure>
-						<a class="photostack-img">
+						<a class="polaroids-img">
 							<img src="<%= artistData[0].image %>"/>
 						</a>
 						<figcaption>
-							<h2 class="photostack-title"><%= artistData[0].name %></h2>
+							<h2 class="polaroids-title"><%= artistData[0].name %></h2>
 						</figcaption>
 					</figure>
 					<% for (let i=1; i < artistData.length; i++) { %>
 						<figure data-dummy>
-							<a class="photostack-img">
+							<a class="polaroids-img">
 								<img src="<%= artistData[i].image %>"/>
 							</a>
 							<figcaption>
-								<h2 class="photostack-title"><%= artistData[i].name %></h2>
+								<h2 class="polaroids-title"><%= artistData[i].name %></h2>
 							</figcaption>
 						</figure>
 					<% } %>
@@ -39,10 +39,10 @@
 		<script>
 		<%- scatteredPolaroids %>
 
-			new Photostack(document.getElementById('photostack'), {
+			new Polaroids(document.getElementById('polaroids'), {
 				callback: function(err) {
 					if(err) {
-						return console.error(`Photostack error: ${err}`);
+						return console.error(`Scattered Polaroids error: ${err}`);
 					}
 
 					console.log('Done rendering!');

@@ -1,7 +1,7 @@
 ((window) => {
 	'use strict';
 
-	class Photostack {
+	class Polaroids {
 		constructor(el, options) {
 			this.el = el;
 			this.options = options;
@@ -106,7 +106,7 @@
 						this.currentItem.style.WebkitTransform = translate;
 						this.currentItem.style.msTransform = translate;
 						this.currentItem.style.transform = translate;
-						this.currentItem.classList.add('photostack-current');
+						this.currentItem.classList.add('polaroids-current');
 					} else {
 						const rotation = Math.floor(Math.random() * (maxrot - minrot + 1) + minrot);
 						const translate = `translate(${gridVal.x}px,${gridVal.y}px) rotate(${rotation}deg)`;
@@ -170,5 +170,5 @@
 		};
 	}
 
-	window.Photostack = Photostack;
+	window.Polaroids = Polaroids;
 })(window);
