@@ -1,104 +1,58 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Scattered Polaroids Example</title>
-		<link rel="stylesheet" type="text/css" href="css/styles.css" />
-		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
-		<link href="https://fonts.googleapis.com/css?family=Rock+Salt" rel="stylesheet" type="text/css">
-	</head>
-	<body>
-		<div class="container">
-			<div id="polaroids" class="polaroids">
-				<div>
-					<figure>
-						<a class="polaroids-img">
-							<img src="https://i.scdn.co/image/719dab7f27ba0793b4ca7c5672ecf56d3d88467b"/>
-						</a>
-						<figcaption>
-							<h2 class="polaroids-title">Marshmello</h2>
-						</figcaption>
-					</figure>
-					<figure data-dummy>
-						<a class="polaroids-img">
-							<img src="http://img2-ak.lst.fm/i/u/174s/eb5236205e1e488899bdc52b7090476f.png"/>
-						</a>
-						<figcaption>
-							<h2 class="polaroids-title">We Came As Romans</h2>
-						</figcaption>
-					</figure>
-					<figure data-dummy>
-						<a class="polaroids-img">
-							<img src="https://i.scdn.co/image/9da714082fe9696529abadc8e4095451221b4483"/>
-						</a>
-						<figcaption>
-							<h2 class="polaroids-title">The Chainsmokers</h2>
-						</figcaption>
-					</figure>
-					<figure data-dummy>
-						<a class="polaroids-img">
-							<img src="https://i.scdn.co/image/5b6a5e16df100141e93bf8fb695042d375e96e77"/>
-						</a>
-						<figcaption>
-							<h2 class="polaroids-title">Hillsong United</h2>
-						</figcaption>
-					</figure>
-					<figure data-dummy>
-						<a href="#" class="polaroids-img">
-							<img src="http://img2-ak.lst.fm/i/u/174s/1fe6c478ff994186b40bcecd1468993a.png"/>
-						</a>
-						<figcaption>
-							<h2 class="polaroids-title">A Day to Remember</h2>
-						</figcaption>
-					</figure>
-					<figure data-dummy>
-						<a href="#" class="polaroids-img">
-							<img src="http://img2-ak.lst.fm/i/u/174s/cc6304fbf8c1d6a39bfad62e660b6b99.png"/>
-						</a>
-						<figcaption>
-							<h2 class="polaroids-title">NF</h2>
-						</figcaption>
-					</figure>
-					<figure data-dummy>
-						<a href="#" class="polaroids-img">
-							<img src="http://img2-ak.lst.fm/i/u/174s/81179966b2804e8b8832a505553afe68.png"/>
-						</a>
-						<figcaption>
-							<h2 class="polaroids-title">For All Those Sleeping</h2>
-						</figcaption>
-					</figure>
-					<figure data-dummy>
-						<a href="#" class="polaroids-img">
-							<img src="http://img2-ak.lst.fm/i/u/770x0/5679d6de42f7375d2118db756a87d8fd.jpg"/>
-						</a>
-						<figcaption>
-							<h2 class="polaroids-title">One Direction</h2>
-						</figcaption>
-					</figure>
-					<figure data-dummy>
-						<a href="#" class="polaroids-img">
-							<img src="https://i.scdn.co/image/881192d40935946e36d534e24a3df821579c5b83"/>
-						</a>
-						<figcaption>
-							<h2 class="polaroids-title">Odesa</h2>
-						</figcaption>
-					</figure>
-				</div>
-			</div>
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Scattered Polaroids Example</title>
+	<link rel="stylesheet" type="text/css" href="css/styles.css" />
+	<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+	<link href="https://fonts.googleapis.com/css?family=Rock+Salt" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<div class="container">
+		<div id="polaroids" class="polaroids">
+			<div id="figureWrapper"></div>
 		</div>
-		<script src="js/scattered-polaroids.js"></script>
-		<script>
+	</div>
+	<script src="js/scattered-polaroids.js"></script>
+	<script>
+		fetch('./example.json')
+			.then(response => response.json())
+			.then(obj => setData(obj));
+
+		const setData = (exampleData) => {
+			let myHTML = '';
+			var wrapper = document.getElementById("figureWrapper");
+
+			exampleData.map(x => {
+				myHTML += `
+					<figure>
+							<a class="polaroids-img">
+								<img src="${x.image}" />
+							</a>
+							<figcaption>
+								<h2 class="polaroids-title">${x.name}</h2>
+							</figcaption>
+						</figure>
+					`;
+			});
+
+			wrapper.innerHTML = myHTML;
+
 			new Polaroids(document.getElementById('polaroids'), {
-				callback: function(err) {
-					if(err) {
+				callback: function (err) {
+					if (err) {
 						return console.error(`Scattered Polaroids error: ${err}`);
 					}
 
 					console.log('Done rendering!');
 				}
 			});
-		</script>
-	</body>
+		};
+	</script>
+</body>
+
 </html>

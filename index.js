@@ -3,7 +3,7 @@ const fs = require('fs');
 const ejs = require('ejs');
 const puppeteer = require('puppeteer');
 
-const artistData = require('./example');
+const artistData = require('./example.json')
 const { width, height } = require('./config');
 
 const options = {
@@ -41,8 +41,9 @@ const renderedPage = ejs.render(templatePage, templateData, {});
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.setViewport({ width, height });
-  console.log(renderedPage);
+  // console.log(renderedPage);
   await page.setContent(renderedPage, { waitUntil: 'networkidle0'} );
   await page.screenshot(options);
   await browser.close();
+	console.log('Image created: scattered-polaroids.png');
 })()
